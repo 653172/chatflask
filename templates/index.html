@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini AI Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Chat container */
+        #chat-box {
+            max-height: 500px;
+            overflow-y: auto;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        /* Custom scrollbar */
+        #chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-box::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 10px;
+        }
+
+        /* Smooth Buttons */
+        .btn {
+            transition: all 0.3s ease-in-out;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-6 relative">
+        <!-- Header -->
+        <div class="text-center py-3 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-t-lg">
+            <h2 class="text-2xl font-bold">Gemini AI Chat</h2>
+        </div>
+
+        <!-- Clear Chat Button -->
+        <form action="/clear" method="POST" class="absolute top-2 right-2">
+            <button type="submit" class="text-gray-600 text-xs px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 btn">
+                Clear
+            </button>
+        </form>
+
+        <!-- Chat Box -->
+        <div id="chat-box" class="mt-4 p-4 h-96 overflow-y-auto bg-gray-50 border rounded-lg shadow-inner">
+            {% for chat in chat_history %}
+                <!-- User Message -->
+                <div class="flex justify-end mb-2">
+                    <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl max-w-xs text-sm shadow-md">
+                        {{ chat.user }}
+                    </div>
+                </div>
+                <!-- AI Response -->
+                <div class="flex justify-start mb-2">
+                    <div class="bg-gray-300 text-black px-4 py-2 rounded-2xl max-w-xs text-sm shadow-md">
+                        {{ chat.bot | safe }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Input Form -->
+        <form method="POST" class="mt-4 flex">
+            <input type="text" name="user_input" id="user-input"
+                   class="flex-1 p-3 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                   placeholder="Type your message..." required>
+            <button type="submit"
+                    class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-6 rounded-r-full btn">
+                Send
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Auto-scroll to latest message
+        window.onload = function() {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+    </script>
+
+</body>
+</html>
